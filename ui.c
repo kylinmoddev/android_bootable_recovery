@@ -774,7 +774,7 @@ int ui_start_menu(const char** headers, char** items, int initial_selection) {
         }
 
         if (gShowBackButton && !ui_root_menu) {
-            strcpy(menu[i], " - +++++Go Back+++++");
+            strcpy(menu[i], " - +++++返回上级菜单+++++");
             ++i;
         }
 

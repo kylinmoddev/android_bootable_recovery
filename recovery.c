@@ -396,12 +396,12 @@ erase_volume(const char *volume) {
             closedir(d);
         } else {
             if (errno != ENOENT) {
-                printf("opendir failed: %s\n", strerror(errno));
+                printf("打开目录失败: %s\n", strerror(errno));
             }
         }
     }
 
-    ui_print("Formatting %s...\n", volume);
+    ui_print("正在格式化 %s...\n", volume);
 
     ensure_path_unmounted(volume);
     int result = format_volume(volume);
@@ -564,7 +564,7 @@ get_menu_selection(const char** headers, char** items, int menu_only,
             if (ui_text_ever_visible()) {
                 continue;
             } else {
-                LOGI("timed out waiting for key input; rebooting.\n");
+                LOGI("键盘输入等待超时; 重启中.\n");
                 ui_end_menu();
                 return ITEM_REBOOT;
             }
@@ -638,7 +638,7 @@ static int
 update_directory(const char* path, const char* unmount_when_done) {
     ensure_path_mounted(path);
 
-    const char* MENU_HEADERS[] = { "Choose a package to install:",
+    const char* MENU_HEADERS[] = { "选择一个刷机包:",
                                    path,
                                    "",
                                    NULL };
@@ -734,7 +734,7 @@ update_directory(const char* path, const char* unmount_when_done) {
             strlcat(new_path, "/", PATH_MAX);
             strlcat(new_path, item, PATH_MAX);
 
-            ui_print("\n-- Install %s ...\n", path);
+            ui_print("\n-- 正在安装 %s ...\n", path);
             set_sdcard_update_bootloader_message();
             char* copy = copy_sideloaded_package(new_path);
             if (unmount_when_done != NULL) {
@@ -763,10 +763,10 @@ update_directory(const char* path, const char* unmount_when_done) {
 
 static void
 wipe_data(int confirm) {
-    if (confirm && !confirm_selection( "Confirm wipe of all user data?", "Yes - Wipe all user data"))
+    if (confirm && !confirm_selection( "确定要清空所有用户数据吗?", "是的 - 清空所有用户数据"))
         return;
 
-    ui_print("\n-- Wiping data...\n");
+    ui_print("\n-- 正在清空...\n");
     device_wipe_data();
     erase_volume("/data");
     erase_volume("/cache");
@@ -775,7 +775,7 @@ wipe_data(int confirm) {
     }
     erase_volume("/sd-ext");
     erase_volume(get_android_secure_path());
-    ui_print("Data wipe complete.\n");
+    ui_print("数据清空完成.\n");
 }
 
 static void headless_wait() {
@@ -825,11 +825,11 @@ prompt_and_wait() {
                     break;
 
                 case ITEM_WIPE_CACHE:
-                    if (confirm_selection("Confirm wipe?", "Yes - Wipe Cache"))
+                    if (confirm_selection("确定要清空缓存吗?", "是的 - 清空缓存"))
                     {
-                        ui_print("\n-- Wiping cache...\n");
+                        ui_print("\n-- 清空缓存...\n");
                         erase_volume("/cache");
-                        ui_print("Cache wipe complete.\n");
+                        ui_print("清空缓存完成.\n");
                         if (!ui_text_visible()) return;
                     }
                     break;
@@ -1009,9 +1009,9 @@ main(int argc, char **argv) {
 #ifdef BOARD_RECOVERY_SWIPE
 #ifndef BOARD_TOUCH_RECOVERY
     //display directions for swipe controls
-    ui_print("Swipe up/down to change selections.\n");
-    ui_print("Swipe to the right for enter.\n");
-    ui_print("Swipe to the left for back.\n");
+    ui_print("滑动到上或下用来选择.\n");
+    ui_print("滑动到右侧为进入.\n");
+    ui_print("滑动到左侧为返回.\n");
 #endif
 #endif
 
@@ -1103,7 +1103,7 @@ main(int argc, char **argv) {
         status = install_package(update_package);
         if (status != INSTALL_SUCCESS) {
             copy_logs();
-            ui_print("Installation aborted.\n");
+            ui_print("安装已中止.\n");
         }
     } else if (wipe_data) {
         if (device_wipe_data()) status = INSTALL_ERROR;
@@ -1114,13 +1114,13 @@ main(int argc, char **argv) {
         if (wipe_cache && erase_volume("/cache")) status = INSTALL_ERROR;
         if (status != INSTALL_SUCCESS) {
             copy_logs();
-            ui_print("Data wipe failed.\n");
+            ui_print("清空数据失败.\n");
         }
     } else if (wipe_cache) {
         if (wipe_cache && erase_volume("/cache")) status = INSTALL_ERROR;
         if (status != INSTALL_SUCCESS) {
             copy_logs();
-            ui_print("Cache wipe failed.\n");
+            ui_print("清空缓存失败.\n");
         }
     } else {
         LOGI("Checking for extendedcommand...\n");
@@ -1177,7 +1177,7 @@ main(int argc, char **argv) {
 
     // Otherwise, get ready to boot the main system...
     finish_recovery(send_intent);
-    ui_print("Rebooting...\n");
+    ui_print("正在重启...\n");
     reboot_main_system(ANDROID_RB_RESTART, 0, 0);
 
     return EXIT_SUCCESS;

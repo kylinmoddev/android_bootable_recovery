@@ -20,15 +20,15 @@
 #include "common.h"
 #include "extendedcommands.h"
 
-char* MENU_HEADERS[] = { NULL };
+char* MENU_HEADERS[] = { "===作者：zerojim===" };
 
-char* MENU_ITEMS[] = { "reboot system now",
-                       "install zip",
-                       "wipe data/factory reset",
-                       "wipe cache partition",
-                       "backup and restore",
-                       "mounts and storage",
-                       "advanced",
+char* MENU_ITEMS[] = { "重启系统",
+                       "刷入ZIP包",
+                       "清空data分区",
+                       "清空cache分区",
+                       "备份和恢复",
+                       "挂载和存储",
+                       "高级选项",
                        NULL };
 
 void device_ui_init(UIParameters* ui_parameters) {
